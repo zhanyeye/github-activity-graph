@@ -87,14 +87,14 @@ export const graphStyle = (
     }
 
     .ct-point {
-      stroke-width: 10px;
+      stroke-width: 8px;
       stroke-linecap: round;
       stroke: #${point};
       animation: blink 1s ease-in-out forwards;
     }
 
     .ct-line {
-      stroke-width: 4px;
+      stroke-width: 2px;
       stroke-dasharray: 5000;
       stroke-dashoffset: 5000;
       stroke: #${line};
