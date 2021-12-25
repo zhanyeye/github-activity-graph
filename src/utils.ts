@@ -2,64 +2,35 @@ import { Request, Response } from 'express';
 import { Card } from './GraphCards';
 import { invalidUserSvg } from './svgs';
 import { fetchContributions } from './fetcher';
-import { selectColors } from '../styles/themes';
-import { queryOption, ParsedQs, userDetails } from '../interfaces/interface';
+import { queryOption, userDetails } from '../interfaces/interface';
 import { fetcher, gqlQuery } from '../types/types';
 
-export const queryOptions = (queryString: ParsedQs): queryOption => {
-  let area = false;
-  const theme: string = queryString.theme || 'default';
-
-  if (String(queryString.area) === 'true') {
-    area = true;
-  }
-
-  // Custom options for user
-  const colors = {
-    areaColor: queryString.area_color
-      ? queryString.area_color
-      : selectColors(theme).areaColor,
-    bgColor: queryString.bg_color
-      ? queryString.bg_color
-      : selectColors(theme).bgColor,
-    borderColor:
-      String(queryString.hide_border) === 'true'
-        ? '0000' // transparent
-        : selectColors(theme).borderColor,
-    color: queryString.color ? queryString.color : selectColors(theme).color,
-    lineColor: queryString.line
-      ? queryString.line
-      : selectColors(theme).lineColor,
-    pointColor: queryString.point
-      ? queryString.point
-      : selectColors(theme).pointColor,
-  };
-
-  const options: queryOption = {
-    username: String(queryString.username),
-    hide_title: String(queryString.hide_title) === 'true' ? true : false,
-    colors: colors,
-    area: area,
-  };
-
-  if (queryString.custom_title)
-    options['custom_title'] = String(queryString.custom_title);
-
-  return options;
-};
 
 const setHttpHeader = (res: Response, directivesAndAge: string): void => {
   res.setHeader('Cache-Control', `${directivesAndAge}`);
   res.set('Content-Type', 'image/svg+xml');
 };
 
+const options: queryOption = {
+  username: 'zhanyeye',
+  hide_title: false,
+  colors: {
+    areaColor: '9e4c98',
+    bgColor: 'fffff0',
+    borderColor: '0000',
+    color: '708090',
+    lineColor: '9e4c98',
+    pointColor: '24292e',
+  },
+  area: true,
+};
+
 //HOF
 export const getGraph =
   (graphqlQuery: gqlQuery, fetch: fetcher) =>
   async (req: Request, res: Response) => {
+    console.log(req.statusCode);
     try {
-      const options: queryOption = queryOptions(req.query);
-
       const fetchCalendarData: userDetails | string = await fetchContributions(
         `${options.username}`,
         graphqlQuery,
@@ -82,7 +53,7 @@ export const getGraph =
         }
 
         const graph: Card = new Card(
-          360,
+          280,
           1200,
           options.colors,
           title,
@@ -109,9 +80,8 @@ export const getGraph =
 export const getData =
   (graphqlQuery: gqlQuery, fetch: fetcher) =>
   async (req: Request, res: Response) => {
+    console.log(req.statusCode);
     try {
-      const options: queryOption = queryOptions(req.query);
-
       const fetchCalendarData: userDetails | string = await fetchContributions(
         `${options.username}`,
         graphqlQuery,
