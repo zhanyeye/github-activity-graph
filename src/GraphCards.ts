@@ -43,9 +43,9 @@ export class Card {
         },
       },
       chartPadding: {
-        top: 80,
+        top: 60,
         right: 50,
-        bottom: 20,
+        bottom: 10,
         left: 20,
       },
       showArea: this.area,
